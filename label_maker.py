@@ -28,25 +28,28 @@ def merge_data(messages, truth, columns):
 
     return final_df
 
+
 def compare_data(df, columns):
     df['label'] = 0
 
     # Iterate over each column, compare with its _truth counterpart, and update 'label'
     for col in columns:
-        # We use np.where to vectorize the comparison for each column pair
-        df['label'] = np.where(df[col] != df[col + '_truth'], 1, df['label'])
-    
+        if col == 'sendTime':
+            # Specific condition for 'sendTime' where the absolute difference must be greater than 0.01
+            df['label'] = np.where((df['sendTime'] - df['sendTime_truth']).abs() > 0.01, 1, df['label'])
+        else:
+            # General condition for all other columns where any difference sets the label to 1
+            df['label'] = np.where(df[col] != df[col + '_truth'], 1, df['label'])
     return df
 
 
 def label_data(messages, truth):
     print("\nProcessing data ...")
     columns = ['sendTime', 'senderPseudo', 'pos', 'spd', 'acl', 'hed']
-    columns_to_compare = ['senderPseudo', 'pos', 'spd', 'acl', 'hed']
     messages = apply_euclidean_norms(messages)
     truth = apply_euclidean_norms(truth)
     merged_df = merge_data(messages, truth, columns)
 
-    final_df = compare_data(merged_df, columns_to_compare)
+    final_df = compare_data(merged_df, columns)
     columns.append('label')
     return final_df[columns]
