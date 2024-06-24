@@ -19,8 +19,8 @@ vehicle_df = read_json_files(folder, "traceJSON")
 filtered_vehicle_df = vehicle_df[vehicle_df["type"] == 3]
 
 truth_df = read_json_files(folder, "traceGroundTruth")
-df = label_data(filtered_vehicle_df, truth_df)
 
+df = label_data(filtered_vehicle_df, truth_df)
 perc = (df["label"].sum()/len(df))*100
 print(f"\nPercentage of attacks or error: {perc}%")
 df.to_csv(folder + ".csv", index=False)
