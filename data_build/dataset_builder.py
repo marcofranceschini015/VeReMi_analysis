@@ -13,7 +13,7 @@ else:
     folder = 'ConstPos_1416'
     print("Default folder: ", folder)
 
-folder = '/Data/' + folder
+folder = '../Data/' + folder
 
 vehicle_df = read_json_files(folder, "traceJSON", read_vehicle_number=True)
 filtered_vehicle_df = vehicle_df[vehicle_df["type"] == 3]

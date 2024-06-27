@@ -41,7 +41,7 @@ def plot_behaviour(df, name):
     plt.title(name)
 
     # Save the plot as PDF
-    plt.savefig(f'/Data/{name}.pdf')
+    plt.savefig(f'{name}.pdf')
 
 
 
@@ -51,5 +51,5 @@ if len(sys.argv) > 1:  # Check if at least one argument is provided
 else:
     file = 'ConstPos_1416'
 
-df = pd.read_csv(f"/Data/{file}.csv")
+df = pd.read_csv(f"../Data/{file}.csv")
 plot_behaviour(df, file)

@@ -24,7 +24,7 @@ def create_sequences(df, time_steps=2):
 n = 110000
 
 # Load the dataset
-df = pd.read_csv('/Data/ConstPos_0709.csv')
+df = pd.read_csv('../Data/ConstPos_0709.csv')
 
 # Sort by senderPseudo and sendTime
 df.sort_values(by=['veh', 'senderPseudo', 'sendTime'], inplace=True)
@@ -43,5 +43,5 @@ df[['pos', 'spd', 'acl', 'hed']] = scaler.fit_transform(df[['pos', 'spd', 'acl',
 
 X, y = create_sequences(df)
 
-np.save('/X.npy', X)
-np.save('/y.npy', y)
+np.save('../X.npy', X)
+np.save('../y.npy', y)

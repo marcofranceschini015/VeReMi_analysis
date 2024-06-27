@@ -29,4 +29,5 @@ history = model.fit(X_train, y_train, epochs=100, batch_size=64, validation_data
 # Evaluate the model
 performance = model.evaluate(X_test, y_test)
 print(f'Test Loss: {performance[0]}, Test Accuracy: {performance[1]}')
+#TODO try to print Precision and recall
 
