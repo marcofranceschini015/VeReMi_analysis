@@ -1,16 +1,27 @@
 import pandas as pd
 import numpy as np
+import math
 
 # Euclidean norm to replace
-# pos, spd, acl, hed
+# spd, acl
 def euclidean_norm(vector):
     return np.linalg.norm(vector)
 
 
-def apply_euclidean_norms(df):
-    for col in df.columns:
-        if col in ['pos', 'spd', 'acl', 'hed']:
-            # Apply the norm to each row in the column
+def calculate_horizontal_angle(x, y):
+    angle = math.degrees(math.atan2(y, x))
+    angle = angle % 360
+    return angle
+
+
+def process_dataframe(df):
+    for col in ['pos', 'spd', 'acl', 'hed']:
+        if col == 'pos':
+            df.loc[:, 'posx'] = df[col].apply(lambda x: x[0])
+            df.loc[:, 'posy'] = df[col].apply(lambda x: x[1])
+        elif col == 'hed':
+            df.loc[:, col] = df[col].apply(lambda x: calculate_horizontal_angle(x[0], x[1]))
+        if col in ['spd', 'acl']:
             df.loc[:, col] = df[col].apply(lambda x: euclidean_norm(np.array(x)))
     return df
 
@@ -44,10 +55,10 @@ def compare_data(df, columns):
 
 def label_data(messages, truth):
     print("\nProcessing data ...")
-    columns_compare = ['sendTime', 'senderPseudo', 'pos', 'spd', 'acl', 'hed']
-    columns_keep = ['sendTime', 'senderPseudo', 'pos', 'spd', 'acl', 'hed', 'veh']
-    messages = apply_euclidean_norms(messages)
-    truth = apply_euclidean_norms(truth)
+    columns_compare = ['sendTime', 'senderPseudo', 'posx', 'posy', 'spd', 'acl', 'hed']
+    columns_keep = ['sendTime', 'senderPseudo', 'posx', 'posy', 'spd', 'acl', 'hed', 'veh']
+    messages = process_dataframe(messages)
+    truth = process_dataframe(truth)
     merged_df = merge_data(messages, truth, columns_keep)
 
     final_df = compare_data(merged_df, columns_compare)

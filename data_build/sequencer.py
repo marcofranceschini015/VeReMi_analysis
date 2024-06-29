@@ -16,15 +16,15 @@ def create_sequences(df, time_steps=2):
         # Use only the normalized features for creating sequences
         group = group.sort_values(by='sendTime')
         for i in range(0, len(group) - time_steps + 1, time_steps):
-            X.append(group.iloc[i:i + time_steps][['pos', 'spd', 'acl', 'hed']].values)
+            X.append(group.iloc[i:i + time_steps][['posx', 'posy', 'spd', 'acl']].values)
             y.append(group.iloc[i + time_steps - 1]['label'])
     return np.array(X), np.array(y)
 
 # How much rows per label
-n = 110000
+n = 300000
 
 # Load the dataset
-df = pd.read_csv('../Data/ConstPos_0709.csv')
+df = pd.read_csv('Data/ConstPos_0709.csv')
 
 # Sort by senderPseudo and sendTime
 df.sort_values(by=['veh', 'senderPseudo', 'sendTime'], inplace=True)
@@ -39,9 +39,9 @@ df = pd.concat([df_head, df_tail], ignore_index=True)
 
 # Normalize the continuous features
 scaler = StandardScaler()
-df[['pos', 'spd', 'acl', 'hed']] = scaler.fit_transform(df[['pos', 'spd', 'acl', 'hed']])
+df[['posx', 'posy','spd', 'acl']] = scaler.fit_transform(df[['posx', 'posy', 'spd', 'acl']])
 
 X, y = create_sequences(df)
 
-np.save('../X.npy', X)
-np.save('../y.npy', y)
+np.save('Data/X.npy', X)
+np.save('Data/y.npy', y)
